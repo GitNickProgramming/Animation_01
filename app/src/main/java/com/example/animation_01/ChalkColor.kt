@@ -1,6 +1,9 @@
 package com.example.animation_01
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 class ChalkColor (c: Int) {
     private var blue: Int = 0    //blue component
@@ -49,6 +52,11 @@ class ChalkColor (c: Int) {
 
         fun blankChalkColor(): ChalkColor{
             val c = Color.argb(255, 255, 255,255)
+            return ChalkColor(c)
+        }
+
+        fun setChalkColor(r: Int, g: Int, b: Int): ChalkColor{
+            val c = Color.argb(255, r, g, b)
             return ChalkColor(c)
         }
     }

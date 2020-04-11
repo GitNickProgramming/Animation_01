@@ -223,6 +223,12 @@ class ChalkBoard//Constructor - initialize this View
         invalidate()
     }
 
+    fun changeColor(r: Int, g: Int, b: Int){
+        currColor = ChalkColor.setChalkColor(r, g, b).color
+        paint.color = currColor
+        invalidate()
+    }
+
     //compute values for one step in the animation
     private fun step() {
         x1 = oldX + fraction * deltaX

@@ -1,13 +1,18 @@
 package com.example.animation_01
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.animation_01.R.id.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.activity_main.*
 
+const val ACTION_COLOR = "msud.cs3013.ACTION_COLOR"
+private const val COLOR_REQUEST_CODE = 0
 class MainActivity : AppCompatActivity() {
     private var cb: ChalkBoard? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +36,19 @@ class MainActivity : AppCompatActivity() {
         //Set which animation to perform on next Button click
         val id = item.itemId
         when (id) {
+            color_picker -> {
+                val sendIntent = Intent().apply {
+                    action = ACTION_COLOR
+                    type = "text/plain"
+                    this.putExtra("Request Code", COLOR_REQUEST_CODE)
+
+                }
+                if (sendIntent.resolveActivity(packageManager) != null) {
+                        startActivityForResult(sendIntent, COLOR_REQUEST_CODE)
+                        onActivityResult(COLOR_REQUEST_CODE, Activity.RESULT_OK, sendIntent)
+                    }
+                return true
+            }
             raw_animation -> {
                 cb!!.setStyle(ChalkBoard.RAW)
                 return true
@@ -86,6 +104,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == COLOR_REQUEST_CODE && resultCode == RESULT_OK)
+            if (data != null){
+                val tempString = data.getStringExtra("colorText")
+                println(tempString)
+                Toast.makeText(this, tempString, Toast.LENGTH_LONG). show()
+                val tempArray = tempString?.split(" ")
+                Toast.makeText(this, tempArray.toString(), Toast.LENGTH_SHORT).show()
+                if(tempArray != null) {
+                    val red = tempArray[0].toInt()
+                    val green = tempArray[1].toInt()
+                    val blue = tempArray[2].toInt()
+                    cb!!.changeColor(red, green, blue)
+                }
+            }
     }
 }
 
